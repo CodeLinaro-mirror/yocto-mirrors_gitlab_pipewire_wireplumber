@@ -1808,6 +1808,19 @@ impl_module_new (lua_State *L)
   }
 }
 
+static int
+impl_module_unload (lua_State *L)
+{
+  WpImplModule *m = wplua_checkobject (L, 1, WP_TYPE_IMPL_MODULE);
+  wp_impl_module_unload (m);
+  return 0;
+}
+
+static const luaL_Reg impl_module_methods[] = {
+  { "unload", impl_module_unload },
+  { NULL, NULL }
+};
+
 /* WpConf */
 
 
@@ -3433,7 +3446,7 @@ wp_lua_scripting_api_init (lua_State *L)
   wplua_register_type_methods (L, WP_TYPE_STATE_METADATA,
       state_metadata_new, state_metadata_methods);
   wplua_register_type_methods (L, WP_TYPE_IMPL_MODULE,
-      impl_module_new, NULL);
+      impl_module_new, impl_module_methods);
   wplua_register_type_methods (L, WP_TYPE_EVENT,
       NULL, event_methods);
   wplua_register_type_methods (L, WP_TYPE_EVENT_HOOK,

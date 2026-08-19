@@ -163,10 +163,7 @@ wp_impl_module_finalize (GObject * object)
 
   g_weak_ref_clear (&self->core);
 
-  wp_impl_module_lock (self);
-  if (self->pw_impl_module)
-    pw_impl_module_destroy (self->pw_impl_module);
-  wp_impl_module_unlock (self);
+  wp_impl_module_unload (self);
 
   g_clear_object (&self->ctx);
 
@@ -344,4 +341,34 @@ wp_impl_module_load (WpCore * core, const gchar * name,
   }
 
   return module;
+}
+
+/*!
+ * \brief Unloads the PipeWire module immediately
+ *
+ * Normally, the module is unloaded when the last reference to \a self is
+ * dropped and the object is finalized. This method allows unloading the module
+ * at a deterministic point in time, without having to rely on the object's
+ * lifetime, which is useful when the module needs to be torn down before
+ * another one that provides the same objects is loaded.
+ *
+ * It is safe to call this method multiple times; subsequent calls have no
+ * effect. The WpImplModule object itself remains valid after the call.
+ *
+ * \ingroup wpimplmodule
+ * \since 0.5.16
+ * \param self the module
+ */
+void
+wp_impl_module_unload (WpImplModule * self)
+{
+  g_return_if_fail (WP_IS_IMPL_MODULE (self));
+
+  wp_impl_module_lock (self);
+  /* pw_impl_module_destroy() triggers the module's "free" event, which is
+     handled by impl_module_free() and resets self->pw_impl_module to NULL,
+     making this method idempotent */
+  if (self->pw_impl_module)
+    pw_impl_module_destroy (self->pw_impl_module);
+  wp_impl_module_unlock (self);
 }
