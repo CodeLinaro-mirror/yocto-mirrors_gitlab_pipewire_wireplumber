@@ -411,10 +411,11 @@ function createNode(parent, id, obj_type, factory, properties)
       local node = createSplitPCMHWNode(dev_props, orig_properties)
       if node ~= nil then
         parent:set_managed_pending(SPLIT_PCM_PARENT_OFFSET + id, node)
-        node:activate(Feature.Proxy.BOUND, function (n, err)
+        node:activate(Features.ALL, function (n, err)
           if err then
             log:warning ("Failed to create ALSA SplitPCM HW node " ..
-                n:get_property ("node.name") .. ": " .. tostring(err))
+                split_hw_node_name .. ": " .. tostring(err))
+            parent:store_managed_pending(SPLIT_PCM_PARENT_OFFSET + id, nil)
           else
             monitorNodeError (n)
             parent:store_managed_object(SPLIT_PCM_PARENT_OFFSET + id, n)
@@ -438,10 +439,11 @@ function createNode(parent, id, obj_type, factory, properties)
   -- create the node
   local node = Node("adapter", properties)
   parent:set_managed_pending(id)
-  node:activate(Feature.Proxy.BOUND, function (n, err)
+  node:activate(Features.ALL, function (n, err)
       if err then
         log:warning ("Failed to create ALSA node " ..
-            n:get_property ("node.name") .. ": " .. tostring(err))
+            tostring (properties["node.name"]) .. ": " .. tostring(err))
+        parent:store_managed_pending(id, nil)
       else
         monitorNodeError (n)
         parent:store_managed_object(id, n)
@@ -473,8 +475,16 @@ function createDevice(parent, id, factory, properties)
   if device then
     device:connect("create-object", createNode)
     device:connect("object-removed", removeNode)
-    device:activate(Feature.SpaDevice.ENABLED | Feature.Proxy.BOUND)
-    parent:store_managed_object(id, device)
+    parent:set_managed_pending(id)
+    device:activate(Features.ALL, function (d, err)
+      if err then
+        log:warning ("Failed to create ALSA device " ..
+            tostring (properties["device.name"]) .. ": " .. tostring(err))
+        parent:store_managed_pending(id, nil)
+      else
+        parent:store_managed_object(id, device)
+      end
+    end)
   else
     log:warning ("Failed to create '" .. factory .. "' device")
   end
