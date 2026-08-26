@@ -288,8 +288,8 @@ wp_object_class_init (WpObjectClass * klass)
 
 /*!
  * \brief Gets the unique wireplumber Id of this object
- * \ingroup wpsessionitem
- * \param self the session item
+ * \ingroup wpobject
+ * \param self the object
  */
 guint
 wp_object_get_id (WpObject * self)
