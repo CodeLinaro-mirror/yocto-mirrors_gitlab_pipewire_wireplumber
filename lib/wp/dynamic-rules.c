@@ -608,6 +608,7 @@ wp_dynamic_rules_class_init (WpDynamicRulesClass *klass)
  * \ingroup wpdynamicrules
  * \param core the WpCore
  * \returns (transfer full): the new WpDynamicRules
+ * \since 0.5.16
  */
 WpDynamicRules *
 wp_dynamic_rules_new (WpCore *core)
@@ -633,6 +634,7 @@ wp_dynamic_rules_new (WpCore *core)
  * \param callback (scope async): callback to evaluate the condition
  * \param user_data data to pass to \a callback
  * \returns the added rule ID, or SPA_ID_INVALID on error
+ * \since 0.5.16
  */
 guint32
 wp_dynamic_rules_add_condition_rule (WpDynamicRules *self,
@@ -698,6 +700,7 @@ emit_revert_for_rule (WpDynamicRules *self, DynamicRule *rule, guint idx)
  * \param actions (transfer none): action object emitted by the rule
  * \param closure (transfer full): closure to evaluate the condition
  * \returns the added rule ID, or SPA_ID_INVALID on error
+ * \since 0.5.16
  */
 guint32
 wp_dynamic_rules_add_condition_rule_closure (WpDynamicRules *self,
@@ -745,6 +748,7 @@ wp_dynamic_rules_add_condition_rule_closure (WpDynamicRules *self,
  * \param self the dynamic rules object
  * \param json_rule (transfer none): JSON object defining the rule
  * \returns the added rule ID, or SPA_ID_INVALID on error
+ * \since 0.5.16
  */
 guint32
 wp_dynamic_rules_add_json_rule (WpDynamicRules *self, WpSpaJson *json_rule)
@@ -774,6 +778,7 @@ wp_dynamic_rules_add_json_rule (WpDynamicRules *self, WpSpaJson *json_rule)
  * \param self the dynamic rules object
  * \param rule_id the rule ID returned by
  * wp_dynamic_rules_add_condition_rule() or wp_dynamic_rules_add_json_rule()
+ * \since 0.5.16
  */
 void
 wp_dynamic_rules_remove_rule (WpDynamicRules *self, guint32 rule_id)
@@ -804,6 +809,7 @@ wp_dynamic_rules_remove_rule (WpDynamicRules *self, guint32 rule_id)
  * \ingroup wpdynamicrules
  * \param self the dynamic rules object
  * \param object (transfer none): the subject object to add
+ * \since 0.5.16
  */
 void
 wp_dynamic_rules_add_object (WpDynamicRules *self, WpGlobalProxy *object)
@@ -824,6 +830,7 @@ wp_dynamic_rules_add_object (WpDynamicRules *self, WpGlobalProxy *object)
  * \ingroup wpdynamicrules
  * \param self the dynamic rules object
  * \param object (transfer none): the subject object to remove
+ * \since 0.5.16
  */
 void
 wp_dynamic_rules_remove_object (WpDynamicRules *self, WpGlobalProxy *object)
