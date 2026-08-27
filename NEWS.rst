@@ -1,5 +1,83 @@
-WirePlumber 0.5.15
+WirePlumber 0.5.16
 ~~~~~~~~~~~~~~~~~~
+
+Additions & Enhancements:
+
+  - Added ``WpClientContext``, a second PipeWire connection running on its
+    own thread that hosts WirePlumber's in-process media objects (loopback
+    and filter-chain modules, ``LocalNode()``, ``SpaDevice()``), so that slow
+    Lua event hooks on the main thread no longer stall their control path;
+    the export core is retired in favor of this new client context (!873)
+
+  - Added new ``WpDynamicRules`` class for matching rules with conditions,
+    and updated ``filter-graph.lua`` to use it, allowing filter-graphs to be
+    loaded and unloaded dynamically depending on whether other objects exist
+    or not (!872)
+
+  - Added ``wp_impl_module_unload()`` and ``LocalModule:unload()``, giving
+    scripts control to unload implemented modules at any time (!881)
+
+  - Added a ``volume-set`` action to ``module-mpris`` to allow adjusting the
+    volume of a remote MPRIS2 player from Lua (!860)
+
+  - Added ``--yes`` flag to ``wpctl reset`` to skip the confirmation prompt
+    (!850)
+
+  - Added ``device.form-factor`` ALSA node property for use in ALSA rules, and
+    made HDMI node descriptions include the name of the connected display when
+    available (!862, !874)
+
+  - Refactored the Bluetooth monitor to use event hooks for handling devices
+    and nodes, matching the design already used by the v4l2 and libcamera
+    monitors (#916; !803)
+
+  - Overhauled the documentation: filled in every stub and missing Lua API
+    and C API page, added a getting started guide, new ``wireplumber(1)``
+    and ``wpexec(1)`` man pages, and removed stale pages describing features
+    renamed or removed in the 0.4 to 0.5 transition (!877)
+
+Fixes:
+
+  - Fixed monitors to always activate all device and node features, and made
+    monitors wait for successful device activation before storing the devices
+    and nodes as a managed objects (#986, #996; !883, !886, !876)
+
+  - Fixed ``find-preferred-profile`` to skip a configured preferred profile
+    that is not available, instead of leaving no profile selected
+    (#993; !884)
+
+  - Fixed ``permission-manager`` to not include destroyed globals when
+    rebuilding the permissions array on ``objects-changed``, fixing some
+    pipewire warnings in the log (!882, !888)
+
+  - Fixed a memory leak in ``WpSpaDevice`` by only collecting params from
+    our own requests (#988; !879)
+
+  - Fixed ``filter-graph`` to correctly apply graphs defined for the same
+    node across multiple configuration files (!870)
+
+  - Fixed several nil-related crashes and correctness issues in Lua scripts
+    (#972; !861, !864, !866, !869)
+
+  - Improved ``apply-access`` to directly attach an already-active permission
+    manager to the client instead of wastefully re-running activation on it
+    (#973; !868)
+
+  - Improved ``state-stream`` change detection to avoid spurious state
+    writes from volume rounding and from unset or empty properties
+    (#974; !867)
+
+  - Fixed ``default-nodes`` to ignore smart filters when selecting the best
+    default node (!857)
+
+  - Removed the ``node.filter.forward-format`` setting and its script,
+    which only worked with 0.4 and never really worked with 0.5 (!878)
+
+Past releases
+~~~~~~~~~~~~~
+
+WirePlumber 0.5.15
+..................
 
 Additions & Enhancements:
 
@@ -78,9 +156,6 @@ Fixes:
   - Fixed gobject-introspection issue on ``spa-pod`` to correctly generate Python bindings (!828)
 
   - Updated translations: Chinese, Serbian, Serbian Latin
-
-Past releases
-~~~~~~~~~~~~~
 
 WirePlumber 0.5.14
 ....................
