@@ -850,7 +850,7 @@ spa_pod_struct_new (lua_State *L)
         break;
       }
       default:
-        luaL_error (L, "Struct does not support lua type ",
+        luaL_error (L, "Struct does not support lua type %s",
             lua_typename(L, lua_type(L, -1)));
         break;
     }
@@ -909,7 +909,7 @@ spa_pod_sequence_new (lua_State *L)
 	      break;
 	    }
 	    default: {
-              luaL_error (L, "Control value does not support lua type ",
+              luaL_error (L, "Control value does not support lua type %s",
 	          lua_typename(L, lua_type(L, -1)));
 	      value = NULL;
 	      break;
