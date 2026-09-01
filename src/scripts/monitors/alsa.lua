@@ -410,12 +410,12 @@ function createNode(parent, id, obj_type, factory, properties)
 
       local node = createSplitPCMHWNode(dev_props, orig_properties)
       if node ~= nil then
-        parent:set_managed_pending(SPLIT_PCM_PARENT_OFFSET + id, node)
+        parent:set_managed_pending(SPLIT_PCM_PARENT_OFFSET + id)
         node:activate(Features.ALL, function (n, err)
           if err then
             log:warning ("Failed to create ALSA SplitPCM HW node " ..
                 split_hw_node_name .. ": " .. tostring(err))
-            parent:store_managed_pending(SPLIT_PCM_PARENT_OFFSET + id, nil)
+            parent:store_managed_object(SPLIT_PCM_PARENT_OFFSET + id, nil)
           else
             monitorNodeError (n)
             parent:store_managed_object(SPLIT_PCM_PARENT_OFFSET + id, n)
@@ -443,7 +443,7 @@ function createNode(parent, id, obj_type, factory, properties)
       if err then
         log:warning ("Failed to create ALSA node " ..
             tostring (properties["node.name"]) .. ": " .. tostring(err))
-        parent:store_managed_pending(id, nil)
+        parent:store_managed_object(id, nil)
       else
         monitorNodeError (n)
         parent:store_managed_object(id, n)
@@ -480,7 +480,7 @@ function createDevice(parent, id, factory, properties)
       if err then
         log:warning ("Failed to create ALSA device " ..
             tostring (properties["device.name"]) .. ": " .. tostring(err))
-        parent:store_managed_pending(id, nil)
+        parent:store_managed_object(id, nil)
       else
         parent:store_managed_object(id, device)
       end
