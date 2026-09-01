@@ -394,6 +394,7 @@ wp_node_new_from_factory (WpCore * core,
       "core", core,
       "factory-name", factory_name,
       "global-properties", props,
+      "own-global", FALSE,
       NULL);
 }
 
