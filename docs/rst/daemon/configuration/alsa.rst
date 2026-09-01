@@ -221,6 +221,21 @@ monitor:
       a sink, it is **not advised** to use a value higher than 1500, as it may
       cause a sink's monitor to be selected as the default source.
 
+   .. note::
+
+      Nodes that tie on ``priority.session`` are ranked further by the
+      priority of the route they play on, but only against nodes of the same
+      card: route priorities rank the outputs of one card against each other
+      and are not comparable across cards. Whatever tie is left is decided in
+      favour of the object that appeared first, so that the default node does
+      not change on its own while the system is running.
+
+      Two cards tying on ``priority.session`` means that no preference between
+      them has been expressed. Which of them appeared first follows the order
+      in which the PipeWire monitor discovered them, which is stable while the
+      system runs but is not guaranteed across a restart, so do not rely on
+      it: set ``priority.session`` on one of them to state the preference.
+
    .. important::
 
       Priorities only decide the default node as long as there is no saved

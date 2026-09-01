@@ -24,9 +24,14 @@ SimpleEventHook {
     local available_nodes = event:get_data ("available-nodes")
     local selected_node = event:get_data ("selected-node")
 
+    -- a node selected by an earlier hook carries no ranking of its own; the
+    -- serials are set so that it keeps the selection whenever a candidate
+    -- merely ties with it on the priority
     local selected = {
       priority = event:get_data ("selected-node-priority") or 0,
+      group_serial = math.mininteger,
       route_priority = event:get_data ("selected-route-priority") or 0,
+      serial = math.mininteger,
     }
 
     -- A very high priority node is already selected, so we can skip this hook
