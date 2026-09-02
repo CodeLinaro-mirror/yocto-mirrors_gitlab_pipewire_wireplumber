@@ -40,6 +40,12 @@ AsyncEventHook {
 
         -- Create the node
         local node = LocalNode("adapter", properties)
+        if node == nil then
+          transition:return_error ("Failed to create BT node " ..
+              tostring (properties ["node.name"]))
+          return
+        end
+
         node:activate(Features.ALL, function (n, e)
           if e ~= nil then
             transition:return_error ("Failed to activate BT node " ..

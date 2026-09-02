@@ -40,6 +40,12 @@ AsyncEventHook {
 
         -- create the node
         local node = LocalNode ("spa-node-factory", properties)
+        if node == nil then
+          transition:return_error ("Failed to create libcamera node " ..
+              tostring (properties ["node.name"]))
+          return
+        end
+
         node:activate (Features.ALL, function (n, e)
           if e ~= nil then
             transition:return_error ("Failed to activate libcamera node " ..

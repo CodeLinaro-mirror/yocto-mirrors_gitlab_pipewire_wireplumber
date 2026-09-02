@@ -41,6 +41,12 @@ AsyncEventHook {
 
         -- create the node
         local node = Node ("spa-node-factory", properties)
+        if node == nil then
+          transition:return_error ("Failed to create V4L2 node " ..
+              tostring (properties ["node.name"]))
+          return
+        end
+
         node:activate (Features.ALL, function (n, e)
           if e ~= nil then
             transition:return_error ("Failed to activate V4L2 node " ..
