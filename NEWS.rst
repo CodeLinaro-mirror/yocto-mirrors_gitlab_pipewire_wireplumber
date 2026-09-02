@@ -1,5 +1,32 @@
-WirePlumber 0.5.16
+WirePlumber 0.5.17
 ~~~~~~~~~~~~~~~~~~
+
+Highlights:
+
+  - This release fixes a significant regression introduced in version 0.5.16.
+    Users are strongly encouraged to upgrade to this release and avoid using 0.5.16.
+
+Fixes:
+
+  - Fixed factory-created device, node and link objects to stop sharing
+    ownership with their registry global, fixing a regression from the
+    ``WpClientContext`` introduced in 0.5.16 that broke proper object
+    destruction in the monitor scripts (#999; !890, !891)
+
+  - Improved ``default-nodes`` to also rank on the object.serial of a node's
+    device and on the node's own object.serial, so that route priorities
+    are only compared between nodes of the same card, and the election no
+    longer changes for no apparent reason when all other keys are equal
+    (!893)
+
+  - Fixed ``m-lua-scripting`` to include the offending Lua type name in POD
+    build errors (!889)
+
+Past releases
+~~~~~~~~~~~~~
+
+WirePlumber 0.5.16
+..................
 
 Additions & Enhancements:
 
@@ -72,9 +99,6 @@ Fixes:
 
   - Removed the ``node.filter.forward-format`` setting and its script,
     which only worked with 0.4 and never really worked with 0.5 (!878)
-
-Past releases
-~~~~~~~~~~~~~
 
 WirePlumber 0.5.15
 ..................
