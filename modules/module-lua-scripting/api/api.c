@@ -3167,7 +3167,14 @@ async_event_hook_execute_step (lua_State *L)
 
   wplua_pushboxed (L, WP_TYPE_EVENT, wp_event_ref (event));
   wplua_pushobject (L, g_object_ref (transition));
-  lua_call (L, 2, 0);
+  /* A step that raises must still complete its transition, otherwise the event
+   * dispatcher keeps waiting for this hook. */
+  if (G_UNLIKELY (lua_pcall (L, 2, 0, 0) != LUA_OK)) {
+    wp_transition_return_error (transition, g_error_new (WP_DOMAIN_LIBRARY,
+        WP_LIBRARY_ERROR_INVARIANT, "error executing step '%s': %s",
+        step_str, lua_tostring (L, -1)));
+    lua_pop (L, 1);
+  }
   return 0;
 }
 
